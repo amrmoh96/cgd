@@ -29,9 +29,23 @@ function App() {
 
   const handleLogin = () => {
     let _user = user;
-    _user.password = window.btoa(_user.password);
-    window.localStorage.setItem("user", JSON.stringify(_user));
-    doLogin();
+    fetch("http://128.199.0.16:3000/users/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: user.username,
+        username: user.password
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json); 
+      });
+    // _user.password = window.btoa(_user.password);
+    // window.localStorage.setItem("user", JSON.stringify(_user));
+    // doLogin();
   };
 
   const handleUsername = (e) => {
