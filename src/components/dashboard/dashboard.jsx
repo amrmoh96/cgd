@@ -3,109 +3,229 @@ import Navbar from "../navbar/navbar";
 import "./dashboard.css";
 import Chart from "chart.js";
 const DashBoard = ({ onSignOut }) => {
-  const [users, setUsers] = useState([]);
+  const [table, setTable] = useState([]);
 
   useEffect(() => {
     //    line chart
-    const lineChart = document.getElementById("lineChart");
-    new Chart(lineChart, {
-      type: "line",
-      data: {
-        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-        datasets: [
-          {
-            label: "# numbers",
-            data: [0, 1, 3, 2, 3, 5, 4, 3, 1, 2],
-            backgroundColor: "#0374ff",
-            borderColor: "#0374ff",
-            borderWidth: 3,
-            // lineTension: 0,
-            fill: false,
-            pointBackgroundColor: "#fff",
-            pointBorderColor: "#0374ff",
-            pointBorderWidth: 2,
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                display: false,
-              },
-            },
-          ],
-        },
-      },
-    });
-
-    // pie chart
-    const pieChart = document.getElementById("pieChart");
-    new Chart(pieChart, {
-      type: "doughnut",
-      data: {
-        labels: ["Red", "Blue", "Green"],
-        datasets: [
-          {
-            data: [4, 2, 3],
-            backgroundColor: ["Red", "Blue", "Green"],
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                display: false,
-              },
-              gridLines: {
-                display: false,
-              },
-            },
-          ],
-          xAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                display: false,
-              },
-              gridLines: {
-                display: false,
-              },
-            },
-          ],
-        },
-      },
-    });
-
-    // users list
-    fetch(`https://jsonplaceholder.typicode.com/users`)
-      .then((res) => res.json())
-      .then((json) => setUsers(json));
-  }, []);
-
-  const addUser = () => {
-    fetch("https://jsonplaceholder.typicode.com/users", {
-      method: "POST",
-      body: JSON.stringify({
-        name: "Jhon",
-        username: "Jhon Doe",
-        email: "JhonDoe@email.com",
-      }),
+    fetch("http://128.199.0.16:3000/users/line-graph", {
+      method: "GET",
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
+        authorization: `bearer ${getToken()}`,
       },
     })
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((json) => {
-        setUsers([...users, json]);
+        console.log(json);
+        const lineChart = document.getElementById("lineChart");
+        new Chart(lineChart, {
+          type: "line",
+          data: {
+            labels: json.message.time,
+            datasets: [
+              {
+                label: "total",
+                data: json.message.total,
+                backgroundColor: "#0374ff",
+                borderColor: "#0374ff",
+                borderWidth: 3,
+                fill: false,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#0374ff",
+                pointBorderWidth: 2,
+              },
+              {
+                label: "recived",
+                data: json.message.recived,
+                backgroundColor: "#f00",
+                borderColor: "#f00",
+                borderWidth: 3,
+                fill: false,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#f00",
+                pointBorderWidth: 2,
+              },
+              {
+                label: "recived",
+                data: json.message.transmited,
+                backgroundColor: "#25c2a0",
+                borderColor: "#25c2a0",
+                borderWidth: 3,
+                fill: false,
+                pointBackgroundColor: "#fff",
+                pointBorderColor: "#25c2a0",
+                pointBorderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                },
+              ],
+            },
+          },
+        });
       });
+
+    // pie chart
+    fetch("http://128.199.0.16:3000/users/pie-chart", {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${getToken()}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        console.log(json);
+        const cpuPieChart = document.getElementById("cpuPieChart");
+        new Chart(cpuPieChart, {
+          type: "pie",
+          data: {
+            labels: ["Used CPU", "Unused CPU"],
+            datasets: [
+              {
+                data: [
+                  json.message.cpu.percent_used,
+                  100 - json.message.cpu.percent_used,
+                ],
+                backgroundColor: ["red", "lightgrey"],
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+        const ramPieChart = document.getElementById("ramPieChart");
+        new Chart(ramPieChart, {
+          type: "pie",
+          data: {
+            labels: ["Used RAM", "Unused RAM"],
+            datasets: [
+              {
+                data: [
+                  json.message.ram.percent_used,
+                  100 - json.message.ram.percent_used,
+                ],
+                backgroundColor: ["red", "lightgrey"],
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+          },
+        });
+
+        const diskPieChart = document.getElementById("diskPieChart");
+        new Chart(diskPieChart, {
+          type: "pie",
+          data: {
+            labels: json.message.disk.map((d) => d.path),
+            datasets: [
+              {
+                data: json.message.disk.map((d) => d.percent_used),
+                backgroundColor: ["blue", "green"],
+              },
+            ],
+          },
+          options: {
+            maintainAspectRatio: false,
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+              xAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    display: false,
+                  },
+                  gridLines: {
+                    display: false,
+                  },
+                },
+              ],
+            },
+          },
+        });
+      });
+
+    // Table View
+    fetch("http://128.199.0.16:3000/users/table-view", {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${getToken()}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => setTable(json.message));
+  }, []);
+
+  const getToken = () => {
+    return window.localStorage.getItem("token");
   };
 
   return (
@@ -119,29 +239,34 @@ const DashBoard = ({ onSignOut }) => {
               <canvas id="lineChart"></canvas>
             </div>
             <div className="chart__container">
-              <canvas id="pieChart"></canvas>
+              <canvas id="cpuPieChart"></canvas>
+            </div>
+            <div className="chart__container">
+              <canvas id="ramPieChart"></canvas>
+            </div>
+            <div className="chart__container">
+              <canvas id="diskPieChart"></canvas>
             </div>
           </div>
           <div className="dashboard__table">
-            <div style={{ textAlign: "right", marginBottom: "10px" }}>
-              <button onClick={addUser}>Add User</button>
-            </div>
             <table cellPadding="0" cellSpacing="0">
               <thead>
                 <tr>
-                  <th>username</th>
-                  <th>name</th>
-                  <th>email</th>
+                  <th>label</th>
+                  <th>bannedwidth</th>
+                  <th>recived bandwidth</th>
+                  <th>transmit bandwidth</th>
+                  <th>active connection count</th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user, index) => (
+                {table.map((T, index) => (
                   <tr key={index}>
-                    <td>{user.username}</td>
-                    <td>{user.name}</td>
-                    <td>
-                      <a href={"mailto:" + user.email}>{user.email}</a>
-                    </td>
+                    <td>{T.label}</td>
+                    <td>{Math.round(T.bandwidth / 1000)} MB</td>
+                    <td>{Math.round(T.recived_bandwidth / 1024)} MB</td>
+                    <td>{Math.round(T.transmit_bandwidth / 1024)} MB</td>
+                    <td>{T.active_conn_count}</td>
                   </tr>
                 ))}
               </tbody>

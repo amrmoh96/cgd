@@ -7,6 +7,7 @@
 .dashboard__charts{
     display: flex;
     align-content: space-around;
+    flex-wrap: wrap;
 }
 .chart__container{
     background: #fff;
@@ -17,6 +18,7 @@
     box-shadow: 2px 0px 3px #00000029;
     position: relative;
     margin: 0 auto;
+    margin-bottom: 15px;
 }
 
 .body__wrapper{

@@ -3,37 +3,32 @@ import "./App.css";
 import Login from "./components/Login/login";
 import Navigation from "./router";
 
-
 function App() {
   const [user, setUser] = useState({ username: "", password: "" });
   const [isLoggedIn, setisLoggedIn] = useState(false);
-  
+
   useEffect(() => {
-    let user = getUser();
-    if (user) {
-      user.password = window.atob(user.password);
-      setUser(user);
+    let token = getToken();
+    if (token) {
       doLogin();
     } else {
       setisLoggedIn(false);
     }
   }, [isLoggedIn]);
 
-
-  const getUser = () => {
-    if (window.localStorage.user && window.localStorage.user != null) {
-      return JSON.parse(window.localStorage.user);
+  const getToken = () => {
+    if (window.localStorage.token && window.localStorage.token != null) {
+      return window.localStorage.token;
     }
     return;
   };
 
   const handleLogin = () => {
-    let _user = user;
     fetch("http://128.199.0.16:3000/users/login", {
       method: "POST",
       body: JSON.stringify({
         email: user.username,
-        username: user.password
+        password: user.password,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -41,11 +36,12 @@ function App() {
     })
       .then((response) => response.json())
       .then((json) => {
-        console.log(json); 
+        console.log(json);
+        if (json.message.token !== undefined) {
+          window.localStorage.setItem("token", json.message.token);
+          doLogin();
+        }
       });
-    // _user.password = window.btoa(_user.password);
-    // window.localStorage.setItem("user", JSON.stringify(_user));
-    // doLogin();
   };
 
   const handleUsername = (e) => {
@@ -61,7 +57,7 @@ function App() {
   };
 
   const SignOut = () => {
-    window.localStorage.removeItem("user");
+    window.localStorage.removeItem("token");
     setisLoggedIn(false);
     setUser({});
   };
