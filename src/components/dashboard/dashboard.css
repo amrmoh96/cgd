@@ -1,0 +1,73 @@
+.dashboard{
+    padding: 50px 3rem;
+    background: #f5f5f5;
+    width: 80%;
+    min-height: 100vh;
+}
+.dashboard__charts{
+    display: flex;
+    align-content: space-around;
+}
+.chart__container{
+    background: #fff;
+    padding: 15px;
+    width: 46%;
+    height: 300px;
+    border-radius: 5px;
+    box-shadow: 2px 0px 3px #00000029;
+    position: relative;
+    margin: 0 auto;
+}
+
+.body__wrapper{
+    display: flex;
+}
+
+.sidebar{
+    width: 20%;
+    min-width: 250px;
+    background: #313131;
+}
+
+
+.dashboard__table{
+    margin-top: 40px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 2px 0px 3px #00000029;
+}
+
+.dashboard__table table{
+    text-align: left;
+    width: 100%;
+}
+.dashboard__table table th{
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 10px 15px 10px;
+    font-size: 14px;
+    border-collapse: collapse;
+}
+
+.dashboard__table table tr{
+    transition: .1s background ease-in-out;
+}
+
+.dashboard__table table tr:hover{
+    background: #e0e0e0;
+    cursor: pointer;
+}
+
+
+.dashboard__table table td{
+    padding: 20px 10px 15px 10px;
+    border: none;
+    font-size: 13px;
+    font-weight: 400;
+    border: 0 solid transparent;
+    border-collapse: collapse;
+}
+
+.dashboard__table table tr:not(:last-child) td{
+    border-bottom: 1px solid #e0e0e0;
+}
