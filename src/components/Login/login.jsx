@@ -1,7 +1,13 @@
 import React from "react";
 import "./login.css";
 
-function Login({ user, onLogin, onPasswordChange, onUsernameChange }) {
+function Login({
+  user,
+  onLogin,
+  onPasswordChange,
+  onUsernameChange,
+  isWaiting,
+}) {
   return (
     <div className="login">
       <h1 className="login__title">LOGIN</h1>
@@ -11,7 +17,7 @@ function Login({ user, onLogin, onPasswordChange, onUsernameChange }) {
             <input
               type="text"
               placeholder="username"
-              value={user.username || ''}
+              value={user.username || ""}
               onChange={onUsernameChange}
             />
           </div>
@@ -19,7 +25,7 @@ function Login({ user, onLogin, onPasswordChange, onUsernameChange }) {
             <input
               type="password"
               placeholder="password"
-              value={user.password || ''}
+              value={user.password || ""}
               onChange={onPasswordChange}
             />
           </div>
@@ -27,6 +33,7 @@ function Login({ user, onLogin, onPasswordChange, onUsernameChange }) {
             type="button"
             onClick={() => onLogin(user)}
             className="login__button"
+            disabled={isWaiting}
           >
             Login
           </button>

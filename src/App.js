@@ -6,6 +6,7 @@ import Navigation from "./router";
 function App() {
   const [user, setUser] = useState({ username: "", password: "" });
   const [isLoggedIn, setisLoggedIn] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   useEffect(() => {
     let token = getToken();
@@ -24,6 +25,7 @@ function App() {
   };
 
   const handleLogin = () => {
+    setIsWaiting(true);
     fetch("http://128.199.0.16:3000/users/login", {
       method: "POST",
       body: JSON.stringify({
@@ -37,6 +39,7 @@ function App() {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
+        setIsWaiting(false);
         if (json.message.token !== undefined) {
           window.localStorage.setItem("token", json.message.token);
           doLogin();
@@ -72,6 +75,7 @@ function App() {
           onLogin={handleLogin}
           onUsernameChange={handleUsername}
           onPasswordChange={handlePassword}
+          isWaiting={isWaiting}
         />
       )}
     </React.Fragment>
